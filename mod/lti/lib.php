@@ -93,12 +93,14 @@ function lti_add_instance($lti, $mform) {
 
     $lti->id = $DB->insert_record('lti', $lti);
 
-    if ($lti->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS) {
-        if (!isset($lti->cmidnumber)) {
-            $lti->cmidnumber = '';
-        }
+    if(isset($lti->instructorchoiceacceptgrades)){
+        if ($lti->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS) {
+            if (!isset($lti->cmidnumber)) {
+                $lti->cmidnumber = '';
+            }
 
-        lti_grade_item_update($lti);
+            lti_grade_item_update($lti);
+        }
     }
 
     return $lti->id;
@@ -131,10 +133,12 @@ function lti_update_instance($lti, $mform) {
         $lti->grade = $DB->get_field('lti', 'grade', array('id' => $lti->id));
     }
 
-    if ($lti->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS) {
-        lti_grade_item_update($lti);
-    } else {
-        lti_grade_item_delete($lti);
+    if(isset($lti->instructorchoiceacceptgrades)){
+        //Original logic was to delete grades if this was unchecked.
+        //Changed it to keep the grades to not destroy data.
+        if ($lti->instructorchoiceacceptgrades == LTI_SETTING_ALWAYS) {
+            lti_grade_item_update($lti);
+        }
     }
 
     return $DB->update_record('lti', $lti);
