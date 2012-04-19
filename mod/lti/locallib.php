@@ -147,6 +147,8 @@ function lti_view($instance) {
             $endpoint = 'http://' . $endpoint;
         }
     }
+    
+    $endpoint = htmlspecialchars_decode($endpoint);
 
     $orgid = $typeconfig['organizationid'];
 
