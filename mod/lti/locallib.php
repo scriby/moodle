@@ -1139,3 +1139,21 @@ function lti_ensure_url_is_https($url) {
 
     return $url;
 }
+
+function lti_get_headers(){
+    if (!function_exists('getallheaders')) 
+    {
+       // IIS support
+       foreach ($_SERVER as $name => $value) 
+       {
+           if (substr($name, 0, 5) == 'HTTP_') 
+           {
+               $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+           }
+       }
+     
+       return $headers;
+    } else {
+        return getallheaders();
+    }
+}
